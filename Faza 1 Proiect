@@ -1,0 +1,185 @@
+#include <iostream>
+using namespace std;
+
+//domeniul ales este sport
+
+class Sala {
+public:
+	const int id;
+	string nume;
+	int nrAbonamente;
+	float pret;
+	char* zona;
+	static bool sauna;
+	Sala() : id(1) {
+		this->nume = "18gym";
+		this->nrAbonamente = 150;
+		this->pret = 178.5;
+		this->zona = new char[strlen("Berceni") + 1];
+		strcpy_s(this->zona, strlen("Berceni") + 1, "Berceni");
+	}
+	Sala(int idNou, string nume) :id(idNou) {
+		this->nume = nume;
+		this->nrAbonamente = 700;
+		this->pret = 500;
+		this->zona = new char[strlen("Piata Unirii") + 1];
+		strcpy_s(this->zona, strlen("Piata Unirii") + 1, "Piata Unirii");
+	}
+
+	Sala(int idNou, string numeNou, float pret) :id(idNou), nume(numeNou), pret(pret) {
+		this->nrAbonamente = 250;
+		this->zona = new char[strlen("Pipera") + 1];
+		strcpy_s(this->zona, strlen("Pipera") + 1, "Pipera");
+	}
+
+	void afisare() {
+		cout << id << ". Sala de fitness " << nume << " se afla in zona " << this->zona << ", pretul abonamentului este de  " << pret << ", sala are " << nrAbonamente << " abonamente active";
+		cout << endl;
+	}
+
+	static void areSauna() {
+		cout << (sauna ? "Sala este dotata cu sauna." : "Sala nu este dotata cu sauna.") << endl;
+	}
+		
+		~Sala() {
+		if (this->zona != NULL) {
+			delete[]this->zona;
+		}
+	}
+
+};
+ bool Sala::sauna = true;
+
+class Scripete {
+public:
+	const int id;
+	string culoare;
+	float pret;
+	int* kilograme;
+	static string brand;
+
+	Scripete() :id(1) {
+		this->culoare = "negru";
+		this->pret = 1550;
+		this->kilograme = NULL;
+	}
+
+	Scripete(int idNou, string culoare, float pret) :id(idNou) {
+		this->culoare = culoare;
+		this->pret = pret;
+		this->kilograme = NULL;
+	}
+
+	Scripete(int idNou, string culoare, float pret, int* kilograme) :id(idNou), culoare(culoare), pret(pret) {
+		if (pret) {
+			this->kilograme = new int(*kilograme);
+		}
+	}
+
+	void afisare() {
+		cout << id << ". " << "Scripetele de la brandul " << brand << " este " << culoare<<". ";
+		if (kilograme) {
+			cout <<"Are o incarcatura de "<< * kilograme<<" kilograme. ";
+		}
+		else {
+			cout << "Scripetele nu vine la pachet cu greutati. ";
+		}
+		cout<< " Acest scripete costa " << pret << "." << endl;
+	}
+
+	static void schimbaBrand(string& brandNou) {
+		brand = brandNou;
+	}
+
+	~Scripete() {
+		if (this->kilograme != NULL) {
+			delete[]this->kilograme;
+		}
+	}
+};
+string Scripete::brand = "Technogym";
+
+class Supliment {
+public:
+	const int id;
+	string nume;
+	float pret;
+	int cantitate;
+	char* producator;
+	static int valabilitate;
+	
+	Supliment() :id(1) {
+		this->nume = "Proteina";
+		this->pret = 300;
+		this->cantitate = 1000;
+		this->producator = new char[strlen("Myprotein") + 1];
+		strcpy_s(this->producator, strlen("Myprotein") + 1, "Myprotein");
+	}
+
+	Supliment(int idNou, float pret) :id(idNou), pret(pret) {
+		this->nume = "Creatina";
+		this->cantitate = 500;
+		this->producator = new char[strlen("Gymbeam") + 1];
+		strcpy_s(this->producator, strlen("Gymbeam") + 1, "Gymbeam");
+	}
+
+	Supliment(int idNou, float pret, string nume, char* producator) : id(idNou), pret(pret), nume(nume) {
+		this->cantitate = 800;
+		this->producator = new char[strlen(producator) + 1];
+		strcpy_s(this->producator, strlen(producator) + 1, producator);
+	}
+
+
+
+	void afisare() {
+		cout << id << ". " << nume << " de la " << producator << " costa " << pret << "lei, cantitate " << cantitate << " grame, iar termenul de valabilitate este de " << valabilitate << " de zile.";
+		cout << endl;
+	}
+
+	static void schimbaValabilitate(int vNou) {
+		valabilitate = vNou;
+	}
+
+	~Supliment() {
+		if (producator) {
+			delete[]this->producator;
+		}
+	}
+
+};
+int Supliment::valabilitate = 30;
+void main() {
+	string brandNou = "Muscles";
+	int vNou=60;
+	Sala sala1;
+	sala1.afisare();
+	Sala sala2(2, "World Class");
+	sala2.afisare();
+	Sala sala3(3, "Inmotion Fitness", 155.9);
+	sala3.afisare();
+	Sala::areSauna();
+	cout << endl;
+	cout << endl;
+	int greutateNoua = 150;
+	Scripete scripete1;
+	scripete1.afisare();
+	Scripete scripete2(2, "alb", 199.99);
+	scripete2.afisare();
+	Scripete scripete3(3, "roz", 299.30, &greutateNoua);
+	scripete3.afisare();
+	Scripete::schimbaBrand(brandNou);
+	scripete3.afisare();
+	cout << endl;
+	cout << endl;
+	char* producator=new char[strlen("Gymbeam") + 1];
+	strcpy_s(producator, strlen("Gymbeam") + 1, "Gymbeam"); 
+	Supliment proteina;
+	proteina.afisare();
+	Supliment creatina(2, 199.5);
+	creatina.afisare();
+	Supliment bcaa(3, 75, "BCAA", producator);
+	bcaa.afisare();
+	Supliment::schimbaValabilitate(vNou);
+	bcaa.afisare();
+}
+
