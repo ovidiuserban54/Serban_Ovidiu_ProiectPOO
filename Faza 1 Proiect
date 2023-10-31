@@ -4,13 +4,50 @@ using namespace std;
 //domeniul ales este sport
 
 class Sala {
-public:
+private:
 	const int id;
 	string nume;
 	int nrAbonamente;
 	float pret;
 	char* zona;
 	static bool sauna;
+public:
+	const int getID() {
+		return id;
+	}
+	string getNume() {
+		return nume;
+	}
+	int getNrAbonamente() {
+		return nrAbonamente;
+	}
+	float getPret() {
+		return pret;
+	}
+	char* getZona() {
+		return this->zona;
+	}
+	static bool getSauna() {
+		return sauna;
+	}
+	void setNume(string nume) {
+		if (nume.length() > 2)
+			this->nume = nume;
+	}
+	void setNrAbonamente(int nrAbonamente) {
+		if (nrAbonamente > 1)
+			this->nrAbonamente = nrAbonamente;
+	}
+	void setPret(float pret) {
+		if (pret > 2)
+			this->pret = pret;
+	}
+	void setZona(char* zona) {
+		if (strlen(zona) > 1) {
+			this->zona = new char[strlen(zona) + 1];
+			strcpy_s(this->zona, strlen(zona) + 1, zona);
+		}
+	}
 	Sala() : id(1) {
 		this->nume = "18gym";
 		this->nrAbonamente = 150;
@@ -32,32 +69,99 @@ public:
 		strcpy_s(this->zona, strlen("Pipera") + 1, "Pipera");
 	}
 
+
+	Sala(const Sala& s) : id(s.id) {
+		this->nume = s.nume;
+		this->nrAbonamente = s.nrAbonamente;
+		this->pret = s.pret;
+		this->zona = new char[strlen(s.zona) + 1];
+		strcpy_s(this->zona, strlen(s.zona) + 1, s.zona);
+	}
+
+	Sala operator=(const Sala& s) {
+		if (this != &s) {
+			if (this->zona != NULL) {
+				delete[]this->zona;
+			}
+			this->nume = s.nume;
+			this->nrAbonamente = s.nrAbonamente;
+			this->pret = s.pret;
+			this->zona = new char[strlen(s.zona) + 1];
+			strcpy_s(this->zona, strlen(s.zona) + 1, s.zona);
+		}
+		return *this;
+	}
 	void afisare() {
 		cout << id << ". Sala de fitness " << nume << " se afla in zona " << this->zona << ", pretul abonamentului este de  " << pret << ", sala are " << nrAbonamente << " abonamente active";
 		cout << endl;
 	}
 
-	static void areSauna() {
+	static void setSauna() {
 		cout << (sauna ? "Sala este dotata cu sauna." : "Sala nu este dotata cu sauna.") << endl;
 	}
-		
-		~Sala() {
+
+	~Sala() {
 		if (this->zona != NULL) {
 			delete[]this->zona;
 		}
 	}
-
+	friend string getNumeSala2(Sala a);
+	friend float getNrAbonamente2(Sala b);
 };
- bool Sala::sauna = true;
+bool Sala::sauna = true;
+string getNumeSala2(Sala a) {
+	if (a.nume == "World CLass") {
+		cout << "Sala aleasa este ";
+		return a.nume;
+	}
+}
+
+float getNrAbonamente2(Sala b) {
+	if (b.nrAbonamente != NULL) {
+		cout << "Sala are ";
+		return b.nrAbonamente;
+		cout << " abonamente.";
+	}
+}
 
 class Scripete {
-public:
+
+private:
 	const int id;
 	string culoare;
 	float pret;
 	int* kilograme;
 	static string brand;
 
+public:
+	const int getID() {
+		return id;
+	}
+	string getCuloare() {
+		return culoare;
+	}
+	float getPret() {
+		return pret;
+	}
+	int* getKilograme() {
+		return this->kilograme;
+	}
+	static string getBrand() {
+		return brand;
+	}
+	void setCuloare(string culoare) {
+		if (culoare.length() > 2) {
+			this->culoare = culoare;
+		}
+	}
+	void setPret(float pret) {
+		if (pret > 0)
+			this->pret = pret;
+	}
+	void setKilograme(int* kilograme) {
+		if (kilograme != NULL)
+			this->kilograme = kilograme;
+	}
 	Scripete() :id(1) {
 		this->culoare = "negru";
 		this->pret = 1550;
@@ -75,16 +179,32 @@ public:
 			this->kilograme = new int(*kilograme);
 		}
 	}
+	Scripete(const Scripete& sr) :id(sr.id) {
+		this->culoare = sr.culoare;
+		this->pret = sr.pret;
+		this->kilograme = new int(*sr.kilograme);
+	}
 
+	Scripete operator=(const Scripete& sr) {
+		if (this != &sr) {
+			if (this->kilograme != NULL) {
+				delete[]this->kilograme;
+			}
+			this->culoare = sr.culoare;
+			this->pret = sr.pret;
+			this->kilograme = new int(*sr.kilograme);
+		}
+		return*this;
+	}
 	void afisare() {
-		cout << id << ". " << "Scripetele de la brandul " << brand << " este " << culoare<<". ";
+		cout << id << ". " << "Scripetele de la brandul " << brand << " este " << culoare << ". ";
 		if (kilograme) {
-			cout <<"Are o incarcatura de "<< * kilograme<<" kilograme. ";
+			cout << "Are o incarcatura de " << *kilograme << " kilograme. ";
 		}
 		else {
 			cout << "Scripetele nu vine la pachet cu greutati. ";
 		}
-		cout<< " Acest scripete costa " << pret << "." << endl;
+		cout << " Acest scripete costa " << pret << "." << endl;
 	}
 
 	static void schimbaBrand(string& brandNou) {
@@ -96,18 +216,75 @@ public:
 			delete[]this->kilograme;
 		}
 	}
+	friend string getCuloareScripete2(Scripete a);
+	friend float getPret2(Scripete b);
 };
 string Scripete::brand = "Technogym";
+string getCuloareScripete2(Scripete a) {
+	if (a.culoare == "roz") {
+		cout << "Culoarea aleasa este ";
+	}
+	return a.culoare;
+}
 
+float getPret2(Scripete b) {
+	if (b.pret != NULL) {
+		cout << "Scripetele costa ";
+	}
+	return b.pret;
+}
 class Supliment {
-public:
+
+private:
 	const int id;
 	string nume;
 	float pret;
 	int cantitate;
 	char* producator;
 	static int valabilitate;
-	
+
+public:
+
+	int getID() {
+		return id;
+	}
+	string getNume() {
+		return nume;
+	}
+	float getPret() {
+		return pret;
+	}
+	int getCant() {
+		return cantitate;
+	}
+	char* getProducator() {
+		return this->producator;
+	}
+	static int getValabilitate() {
+		return valabilitate;
+	}
+	void setNume(string nume) {
+		if (nume.length() > 2)
+			this->nume = nume;
+	}
+
+	void setPret(float pret) {
+		if (pret > 0)
+			this->pret = pret;
+	}
+	void setCant(int cant) {
+		if (cant > 0)
+			this->cantitate = cant;
+	}
+
+	void setProducator(char* producator) {
+		if (strlen(producator) > 0) {
+			this->producator = new char[strlen(producator) + 1];
+			strcpy_s(this->producator, strlen(producator) + 1, producator);
+		}
+	}
+
+
 	Supliment() :id(1) {
 		this->nume = "Proteina";
 		this->pret = 300;
@@ -129,57 +306,119 @@ public:
 		strcpy_s(this->producator, strlen(producator) + 1, producator);
 	}
 
+	Supliment(const Supliment& su) :id(su.id) {
+		this->nume = su.nume;
+		this->pret = su.pret;
+		this->cantitate = su.cantitate;
+		this->producator = new char[strlen(su.producator) + 1];
+		strcpy_s(this->producator, strlen(su.producator) + 1, su.producator);
+	}
 
+	Supliment operator=(const Supliment& su) {
+		if (this != &su) {
+			if (producator != NULL) {
+				delete[]this->producator;
+			}
+			this->nume = su.nume;
+			this->pret = su.pret;
+			this->cantitate = su.cantitate;
+			this->producator = new char[strlen(su.producator) + 1];
+			strcpy_s(this->producator, strlen(su.producator) + 1, su.producator);
+		}
+		return*this;
+	}
 
 	void afisare() {
 		cout << id << ". " << nume << " de la " << producator << " costa " << pret << "lei, cantitate " << cantitate << " grame, iar termenul de valabilitate este de " << valabilitate << " de zile.";
 		cout << endl;
 	}
 
-	static void schimbaValabilitate(int vNou) {
+	static void setValabilitate(int vNou) {
 		valabilitate = vNou;
 	}
 
 	~Supliment() {
-		if (producator) {
+		if (producator!=NULL) {
 			delete[]this->producator;
 		}
 	}
-
+	friend string getNume2(Supliment a);
+	friend int getCantitate2(Supliment b);
 };
 int Supliment::valabilitate = 30;
-void main() {
-	string brandNou = "Muscles";
-	int vNou=60;
-	Sala sala1;
-	sala1.afisare();
-	Sala sala2(2, "World Class");
-	sala2.afisare();
-	Sala sala3(3, "Inmotion Fitness", 155.9);
-	sala3.afisare();
-	Sala::areSauna();
-	cout << endl;
-	cout << endl;
-	int greutateNoua = 150;
-	Scripete scripete1;
-	scripete1.afisare();
-	Scripete scripete2(2, "alb", 199.99);
-	scripete2.afisare();
-	Scripete scripete3(3, "roz", 299.30, &greutateNoua);
-	scripete3.afisare();
-	Scripete::schimbaBrand(brandNou);
-	scripete3.afisare();
-	cout << endl;
-	cout << endl;
-	char* producator=new char[strlen("Gymbeam") + 1];
-	strcpy_s(producator, strlen("Gymbeam") + 1, "Gymbeam"); 
-	Supliment proteina;
-	proteina.afisare();
-	Supliment creatina(2, 199.5);
-	creatina.afisare();
-	Supliment bcaa(3, 75, "BCAA", producator);
-	bcaa.afisare();
-	Supliment::schimbaValabilitate(vNou);
-	bcaa.afisare();
+string getNume2(Supliment a) {
+	if (a.nume == "creatina") {
+		cout << "Suplimentul ales este ";
+	}
+	return a.nume;
 }
 
+int getCantitate2(Supliment b) {
+	if (b.cantitate != NULL) {
+		cout << "Produsul vine in cantitate de ";
+	}
+	return b.cantitate;
+}
+void main() {
+	string brandNou = "Muscles";
+	int vNou = 60;
+	char* zona = new char(strlen("Constanta") + 1);
+	strcpy_s(zona, strlen("Constanta") + 1, "Constanta");
+	Sala sala1;
+	Sala sala2(2, "World Class");
+	Sala sala3(3, "Inmotion Fitness", 155.9);
+	Sala::setSauna();
+	Sala sala4;
+	cout << getNumeSala2(sala2) << endl;
+	cout << getNrAbonamente2(sala3) << endl;
+	sala4 = sala3;
+	cout << sala2.getID() << endl;
+	sala2.setNume("18GYM");
+	cout << sala2.getNume() << endl;
+	sala2.setNrAbonamente(329);
+	cout << sala2.getNrAbonamente() << endl;
+	sala2.setPret(99.99);
+	cout << sala2.getPret() << endl;
+	sala2.setZona(zona);
+	cout << sala2.getZona() << endl;
+	
+	int greutate = 150;
+	int greutate2 = 300;
+	Scripete scripete1;
+	Scripete scripete2(2, "alb", 199.99);
+	Scripete scripete3(3, "roz", 299.30, &greutate);
+	Scripete scripete4;
+	scripete4 = scripete3;
+	Scripete::schimbaBrand(brandNou);
+	cout << getCuloareScripete2(scripete3) << endl;
+	cout << getPret2(scripete3) << endl;
+	cout << scripete2.getID()<<endl;
+	scripete2.setCuloare("albastru");
+	cout << scripete2.getCuloare()<<endl;
+	scripete2.setKilograme(&greutate2);
+	cout << *scripete2.getKilograme()<<endl;
+	scripete2.setPret(399.89);
+	cout << scripete2.getPret()<<endl;
+	
+	char* producator = new char[strlen("Gymbeam") + 1];
+	strcpy_s(producator, strlen("Gymbeam") + 1, "Gymbeam");
+	char* producator2 = new char[strlen("MYprotein") + 1];
+	strcpy_s(producator2, strlen("MYprotein") + 1, "MYprotein");
+	Supliment proteina;
+	Supliment creatina(2, 199.5);
+	Supliment bcaa(3, 75, "BCAA", producator);
+	Supliment::setValabilitate(vNou);
+	Supliment creatina2;
+	creatina2 = creatina;
+	cout << getNume2(creatina) << endl;
+	cout << getCantitate2(creatina) << endl;
+	cout << creatina.getID()<<endl;
+	creatina.setNume("Creatina Monohidrata");
+	cout << creatina.getNume() << endl;
+	creatina.setPret(500);
+	cout << creatina.getPret()<<endl;
+	creatina.setCant(2000);
+	cout << creatina.getCant()<<endl;
+	creatina.setProducator(producator2);
+	cout << creatina.getProducator();
+}
