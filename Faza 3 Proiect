@@ -50,8 +50,8 @@ public:
 	}
 	Sala() : id(1) {
 		this->nume = "18gym";
-		this->nrAbonamente = 150;
-		this->pret = 178.5;
+		this->nrAbonamente = 0;
+		this->pret = 0;
 		this->zona = new char[strlen("Berceni") + 1];
 		strcpy_s(this->zona, strlen("Berceni") + 1, "Berceni");
 	}
@@ -91,10 +91,6 @@ public:
 		}
 		return *this;
 	}
-	void afisare() {
-		cout << id << ". Sala de fitness " << nume << " se afla in zona " << this->zona << ", pretul abonamentului este de  " << pret << ", sala are " << nrAbonamente << " abonamente active";
-		cout << endl;
-	}
 
 	static void setSauna() {
 		cout << (sauna ? "Sala este dotata cu sauna." : "Sala nu este dotata cu sauna.") << endl;
@@ -107,21 +103,48 @@ public:
 	}
 	friend string getNumeSala2(Sala a);
 	friend float getNrAbonamente2(Sala b);
+	friend ostream& operator<<(ostream& out, const Sala& sala);
+	friend istream& operator>>(istream& citeste, Sala& sala);
+
+	Sala operator+ (const Sala& s) {
+		Sala aux = *this;
+		aux.nrAbonamente = this->nrAbonamente + s.nrAbonamente;
+		return aux;
+	}
 };
 bool Sala::sauna = true;
 string getNumeSala2(Sala a) {
 	if (a.nume == "World CLass") {
 		cout << "Sala aleasa este ";
-		return a.nume;
 	}
+	return a.nume;
 }
 
 float getNrAbonamente2(Sala b) {
-	if (b.nrAbonamente != NULL) {
-		cout << "Sala are ";
-		return b.nrAbonamente;
-		cout << " abonamente.";
+
+	return b.nrAbonamente;
+
+}
+
+ostream& operator<<(ostream& out, const Sala& sala) {
+	out << sala.id << ". Sala de fitness " << sala.nume << " se afla in zona " << sala.zona << ", pretul abonamentului este de  " << sala.pret << ", sala are " << sala.nrAbonamente << " abonamente active";
+	return out;
+}
+
+istream& operator>>(istream& citeste, Sala& sala) {
+	cout << "Nume: ";
+	citeste >> sala.nume;
+	cout << "Nr abonamente: ";
+	citeste >> sala.nrAbonamente;
+	cout << "Pret abonament: ";
+	citeste >> sala.pret;
+	if (sala.zona != NULL) {
+		delete[]sala.zona;
 	}
+	sala.zona = new char[strlen(sala.zona) + 1];
+	cout << "Zona: ";
+	citeste >> sala.zona;
+	return citeste;
 }
 
 class Scripete {
@@ -159,8 +182,13 @@ public:
 			this->pret = pret;
 	}
 	void setKilograme(int* kilograme) {
-		if (kilograme != NULL)
-			this->kilograme = kilograme;
+		if (kilograme != NULL) {
+			if (this->kilograme != NULL) {
+				delete[]this->kilograme;
+			}
+			this->kilograme = new int[1];
+			*this->kilograme = *kilograme;
+		}
 	}
 	Scripete() :id(1) {
 		this->culoare = "negru";
@@ -176,13 +204,15 @@ public:
 
 	Scripete(int idNou, string culoare, float pret, int* kilograme) :id(idNou), culoare(culoare), pret(pret) {
 		if (pret) {
-			this->kilograme = new int(*kilograme);
+			this->kilograme = new int[1];
+			*this->kilograme = *kilograme;
 		}
 	}
 	Scripete(const Scripete& sr) :id(sr.id) {
 		this->culoare = sr.culoare;
 		this->pret = sr.pret;
-		this->kilograme = new int(*sr.kilograme);
+		this->kilograme = new int[1];
+		*this->kilograme = *kilograme;
 	}
 
 	Scripete operator=(const Scripete& sr) {
@@ -192,19 +222,10 @@ public:
 			}
 			this->culoare = sr.culoare;
 			this->pret = sr.pret;
-			this->kilograme = new int(*sr.kilograme);
+			this->kilograme = new int[1];
+			*this->kilograme = *sr.kilograme;
 		}
 		return*this;
-	}
-	void afisare() {
-		cout << id << ". " << "Scripetele de la brandul " << brand << " este " << culoare << ". ";
-		if (kilograme) {
-			cout << "Are o incarcatura de " << *kilograme << " kilograme. ";
-		}
-		else {
-			cout << "Scripetele nu vine la pachet cu greutati. ";
-		}
-		cout << " Acest scripete costa " << pret << "." << endl;
 	}
 
 	static void schimbaBrand(string& brandNou) {
@@ -218,6 +239,15 @@ public:
 	}
 	friend string getCuloareScripete2(Scripete a);
 	friend float getPret2(Scripete b);
+	friend ostream& operator<<(ostream& out, const Scripete& scripete);
+	friend istream& operator>>(istream& mouse, Scripete& scripete);
+
+	Scripete operator+(const Scripete& s) {
+		Scripete aux = *this;
+		aux.pret = this->pret + s.pret;
+		return aux;
+	}
+
 };
 string Scripete::brand = "Technogym";
 string getCuloareScripete2(Scripete a) {
@@ -233,6 +263,37 @@ float getPret2(Scripete b) {
 	}
 	return b.pret;
 }
+
+istream& operator>>(istream& mouse, Scripete& scripete) {
+
+	cout << "Culoarea: ";
+	mouse >> scripete.culoare;
+	if (scripete.kilograme != NULL) {
+		delete[]scripete.kilograme;
+	}
+
+	scripete.kilograme = new int[1];
+	cout << "Greutatea este ";
+	mouse >> *scripete.kilograme;
+
+	cout << "Scripetele costa ";
+	mouse >> scripete.pret;
+	return mouse;
+}
+
+ostream& operator<<(ostream& out, const Scripete& scripete) {
+	out << scripete.id << ". Scripetele de la brandul " << scripete.brand << " este " << scripete.culoare << ". ";
+	if (scripete.kilograme) {
+		out << "Are o incarcatura de " << *scripete.kilograme << " kilograme. ";
+	}
+	else {
+		out << "Scripetele nu vine la pachet cu greutati. ";
+	}
+	out << " Acest scripete costa " << scripete.pret << "." << endl;
+	return out;
+}
+
+
 class Supliment {
 
 private:
@@ -328,22 +389,40 @@ public:
 		return*this;
 	}
 
-	void afisare() {
-		cout << id << ". " << nume << " de la " << producator << " costa " << pret << "lei, cantitate " << cantitate << " grame, iar termenul de valabilitate este de " << valabilitate << " de zile.";
-		cout << endl;
-	}
 
 	static void setValabilitate(int vNou) {
 		valabilitate = vNou;
 	}
+	char& operator[](int index) {
+		return this->producator[index];
+	}
 
 	~Supliment() {
-		if (producator!=NULL) {
+		if (producator != NULL) {
 			delete[]this->producator;
 		}
 	}
 	friend string getNume2(Supliment a);
 	friend int getCantitate2(Supliment b);
+	friend ostream& operator<<(ostream& out, const Supliment& supliment) {
+		out << supliment.id << "." << supliment.nume << " de la " << supliment.producator << " costa " << supliment.pret << "lei, cantitate " << supliment.cantitate << " grame, iar termenul de valabilitate este de " << supliment.valabilitate << " de zile.";
+		return out;
+	}
+	friend istream& operator>>(istream& citire, Supliment& supliment) {
+		cout << "Nume:";
+		citire >> supliment.nume;
+		cout << "Pret: ";
+		citire >> supliment.pret;
+		cout << "Cantitate: ";
+		citire >> supliment.cantitate;
+		if (supliment.producator != NULL) {
+			delete[]supliment.producator;
+		}
+		supliment.producator = new char[strlen(supliment.producator) + 1];
+		cout << "Producator: ";
+		citire >> supliment.producator;
+		return citire;
+	}
 };
 int Supliment::valabilitate = 30;
 string getNume2(Supliment a) {
@@ -359,9 +438,10 @@ int getCantitate2(Supliment b) {
 	}
 	return b.cantitate;
 }
+
+
 void main() {
-	string brandNou = "Muscles";
-	int vNou = 60;
+	
 	char* zona = new char(strlen("Constanta") + 1);
 	strcpy_s(zona, strlen("Constanta") + 1, "Constanta");
 	Sala sala1;
@@ -369,37 +449,33 @@ void main() {
 	Sala sala3(3, "Inmotion Fitness", 155.9);
 	Sala::setSauna();
 	Sala sala4;
-	cout << getNumeSala2(sala2) << endl;
-	cout << getNrAbonamente2(sala3) << endl;
-	sala4 = sala3;
-	cout << sala2.getID() << endl;
-	sala2.setNume("18GYM");
-	cout << sala2.getNume() << endl;
-	sala2.setNrAbonamente(329);
-	cout << sala2.getNrAbonamente() << endl;
-	sala2.setPret(99.99);
-	cout << sala2.getPret() << endl;
-	sala2.setZona(zona);
-	cout << sala2.getZona() << endl;
-	
-	int greutate = 150;
-	int greutate2 = 300;
+	cout << sala2<<endl<<sala3<<endl<<sala4 << endl;
+	Sala sala5;
+	Sala sala6;
+	sala6 = sala2;
+	cin >> sala5;
+	sala1 = sala2 + sala3;
+	cout << sala1;
+
+
+	string brandNou = "Muscles";
+	int* greutate = new int[1];
+	greutate[0] = 150;
+	int* greutate2 = new int[2];
+	greutate2[0] = 300;
 	Scripete scripete1;
 	Scripete scripete2(2, "alb", 199.99);
-	Scripete scripete3(3, "roz", 299.30, &greutate);
+	Scripete scripete3(3, "roz", 299.30, greutate);
 	Scripete scripete4;
+	Scripete scripete5;
 	scripete4 = scripete3;
+	cin >> scripete5;
 	Scripete::schimbaBrand(brandNou);
-	cout << getCuloareScripete2(scripete3) << endl;
-	cout << getPret2(scripete3) << endl;
-	cout << scripete2.getID()<<endl;
-	scripete2.setCuloare("albastru");
-	cout << scripete2.getCuloare()<<endl;
-	scripete2.setKilograme(&greutate2);
-	cout << *scripete2.getKilograme()<<endl;
-	scripete2.setPret(399.89);
-	cout << scripete2.getPret()<<endl;
-	
+	cout << scripete5 << endl;
+	scripete4 = scripete2 + scripete3;
+	cout << scripete4;
+
+	int vNou = 60;
 	char* producator = new char[strlen("Gymbeam") + 1];
 	strcpy_s(producator, strlen("Gymbeam") + 1, "Gymbeam");
 	char* producator2 = new char[strlen("MYprotein") + 1];
@@ -410,15 +486,10 @@ void main() {
 	Supliment::setValabilitate(vNou);
 	Supliment creatina2;
 	creatina2 = creatina;
-	cout << getNume2(creatina) << endl;
-	cout << getCantitate2(creatina) << endl;
-	cout << creatina.getID()<<endl;
-	creatina.setNume("Creatina Monohidrata");
-	cout << creatina.getNume() << endl;
-	creatina.setPret(500);
-	cout << creatina.getPret()<<endl;
-	creatina.setCant(2000);
-	cout << creatina.getCant()<<endl;
-	creatina.setProducator(producator2);
-	cout << creatina.getProducator();
+	Supliment creatina3;
+	Supliment creatina4 = creatina;
+	cin >> creatina3;
+	cout << creatina[1];
+	creatina[1] = 'a';
+	cout << creatina;
 }
