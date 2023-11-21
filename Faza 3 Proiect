@@ -469,14 +469,14 @@ void main() {
 	cout << sala3.getID() << sala3.getNrAbonamente() << sala3.getNume() << sala3.getPret() << sala3.getSauna() << sala3.getZona() << endl;
 
 	Sala* v_sala = new Sala[4];
-	int lungime_vector = 4;
-	for (int i = 0; i < lungime_vector; i++)
+	int lungime_vectors = 4;
+	for (int i = 0; i < lungime_vectors; i++)
 	{
 		cout << "Sala " << i + 1 << ": "<<endl;
 		cin >> v_sala[i];
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	}
-	for (int i = 0; i < lungime_vector; i++)
+	for (int i = 0; i < lungime_vectors; i++)
 	{
 		cout << v_sala[i];
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
@@ -559,14 +559,14 @@ void main() {
 	creatina[1] = 'a';
 	cout << creatina;
 	Supliment* v_creatina = new Supliment[4];
-	int lungime_vector = 4;
-	for (int i = 0; i < lungime_vector; i++)
+	int lungime_vectorc = 4;
+	for (int i = 0; i < lungime_vectorc; i++)
 	{
 		cout << "Suplimentul " << i + 1 << ": " << endl;
 		cin >> v_creatina[i];
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	}
-	for (int i = 0; i < lungime_vector; i++)
+	for (int i = 0; i < lungime_vectorc; i++)
 	{
 		cout << v_creatina[i];
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
