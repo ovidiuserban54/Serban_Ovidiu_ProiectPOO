@@ -127,7 +127,8 @@ float getNrAbonamente2(Sala b) {
 }
 
 ostream& operator<<(ostream& out, const Sala& sala) {
-	out << sala.id << ". Sala de fitness " << sala.nume << " se afla in zona " << sala.zona << ", pretul abonamentului este de  " << sala.pret << ", sala are " << sala.nrAbonamente << " abonamente active";
+	out << sala.id << ". Sala de fitness " << sala.nume << " se afla in zona " << sala.zona << ", pretul abonamentului este de  " << sala.pret << ", sala are " << sala.nrAbonamente << " abonamente active" << endl;
+	out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	return out;
 }
 
@@ -290,6 +291,7 @@ ostream& operator<<(ostream& out, const Scripete& scripete) {
 		out << "Scripetele nu vine la pachet cu greutati. ";
 	}
 	out << " Acest scripete costa " << scripete.pret << "." << endl;
+	out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	return out;
 }
 
@@ -405,7 +407,8 @@ public:
 	friend string getNume2(Supliment a);
 	friend int getCantitate2(Supliment b);
 	friend ostream& operator<<(ostream& out, const Supliment& supliment) {
-		out << supliment.id << "." << supliment.nume << " de la " << supliment.producator << " costa " << supliment.pret << "lei, cantitate " << supliment.cantitate << " grame, iar termenul de valabilitate este de " << supliment.valabilitate << " de zile.";
+		out << supliment.id << "." << supliment.nume << " de la " << supliment.producator << " costa " << supliment.pret << "lei, cantitate " << supliment.cantitate << " grame, iar termenul de valabilitate este de " << supliment.valabilitate << " de zile." << endl;
+		out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		return out;
 	}
 	friend istream& operator>>(istream& citire, Supliment& supliment) {
@@ -441,21 +444,67 @@ int getCantitate2(Supliment b) {
 
 
 void main() {
-	
+
 	char* zona = new char(strlen("Constanta") + 1);
 	strcpy_s(zona, strlen("Constanta") + 1, "Constanta");
 	Sala sala1;
 	Sala sala2(2, "World Class");
 	Sala sala3(3, "Inmotion Fitness", 155.9);
-	Sala::setSauna();
-	Sala sala4;
-	cout << sala2<<endl<<sala3<<endl<<sala4 << endl;
+	Sala sala4 = sala3; //constructor copiere
 	Sala sala5;
 	Sala sala6;
-	sala6 = sala2;
-	cin >> sala5;
-	sala1 = sala2 + sala3;
-	cout << sala1;
+	Sala::setSauna();
+	sala6 = sala2; //operator=
+	cin >> sala5;  //operator>>
+	sala1 = sala2 + sala3;  //operator +
+	cout << "Afisarea salii 2 " << endl << sala2;
+	cout << "Afisarea salii 3 " << endl << sala3;  //operator <<
+	cout << "Afisarea salii 4 " << endl << sala4;
+	cout << "Afisarea salii 5 " << endl << sala5;
+	cout << "Afisarea salii 1 " << endl << sala1;
+	sala3.setNume("Fit Gym");
+	sala3.setNrAbonamente(249);
+	sala3.setPret(99.99);
+	sala3.setZona(zona);
+	cout << sala3.getID() << sala3.getNrAbonamente() << sala3.getNume() << sala3.getPret() << sala3.getSauna() << sala3.getZona() << endl;
+
+	Sala* v_sala = new Sala[4];
+	int lungime_vector = 4;
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << "Sala " << i + 1 << ": "<<endl;
+		cin >> v_sala[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << v_sala[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	delete[]v_sala;
+
+	int linii = 2, coloane = 2;
+	Sala** m_sala = new Sala * [linii];
+	for (int i = 0; i < linii; i++)
+		m_sala[i] = new Sala[coloane];
+
+	for (int i = 0; i < linii; i++)
+		for (int j = 0; j < coloane; j++)
+		{
+			cout << "\nCitire sala de pe linia " << i + 1 << " si coloana " << j + 1 << endl;
+			cin >> m_sala[i][j];
+		}
+	for (int i = 0; i < linii; i++)
+		for (int j = 0; j < coloane; j++)
+		{
+			cout << "Afisare sala de pe linia " << i + 1 << " si coloana " << j + 1 << endl;
+			cout << m_sala[i][j];
+		}
+	for (int i = 0; i < linii; i++)
+		delete[]m_sala[i];
+	delete[]m_sala;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
 
 	string brandNou = "Muscles";
@@ -474,6 +523,23 @@ void main() {
 	cout << scripete5 << endl;
 	scripete4 = scripete2 + scripete3;
 	cout << scripete4;
+	Scripete* v_scripete = new Scripete[4];
+	int lungime_vector = 4;
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << "Scripete " << i + 1 << ": "<<endl;
+		cin >> v_scripete[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << v_scripete[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	delete[]v_scripete;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
 
 	int vNou = 60;
 	char* producator = new char[strlen("Gymbeam") + 1];
@@ -492,4 +558,20 @@ void main() {
 	cout << creatina[1];
 	creatina[1] = 'a';
 	cout << creatina;
+	Supliment* v_creatina = new Supliment[4];
+	int lungime_vector = 4;
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << "Suplimentul " << i + 1 << ": " << endl;
+		cin >> v_creatina[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << v_creatina[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	delete[]v_creatina;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 }
