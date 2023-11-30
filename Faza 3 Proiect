@@ -148,6 +148,66 @@ istream& operator>>(istream& citeste, Sala& sala) {
 	return citeste;
 }
 
+
+class Client {
+private:
+	string nume;
+	Sala* sala;
+	int vechime;
+public:
+	Client() {
+		this->nume = "stefan";
+		this->sala=NULL;		
+		this->vechime = 0;
+	}
+
+	Client(int vechime) {
+		this->nume = "Serban Ovidiu";
+		this->sala = sala;
+		this->vechime = vechime;
+	}
+
+	~Client() {
+		if (this->sala != NULL) {
+			delete[]this->sala;
+		}
+	}
+	friend ostream& operator<<(ostream& out, const Client& c) {
+		out << "Clientul " << c.nume << " are o vechime de " << c.vechime<<endl;
+		out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		return out;
+	}
+	
+	string getNumeClient() {
+		return this->nume;
+	}
+
+	void setNumeClient(string numeNou) {
+		this->nume = numeNou;
+	}
+
+	int getVechime() {
+		return this->vechime;
+	}
+
+	void setVechime(int vechimeNoua) {
+		this->vechime = vechimeNoua;
+	}
+
+	Sala* getSala() {
+		return this->sala;
+	}
+
+	Sala operator[](int index) {
+		return this->sala[index];
+	}
+
+	Client operator+(const Client& c) {
+		Client aux = *this;
+		aux.vechime = this->vechime + c.vechime;
+		return aux;
+	}
+};
 class Scripete {
 
 private:
@@ -574,4 +634,12 @@ void main() {
 	delete[]v_creatina;
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
+	Client client1;
+	cout << client1;
+
+	Client client2(5);
+	cout << client2;
+	cout << client2.getNumeClient() << endl << client2.getVechime() << endl;
+	cout << *client2.getSala();
 }
