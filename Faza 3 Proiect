@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 //domeniul ales este sport
@@ -110,6 +111,28 @@ public:
 		Sala aux = *this;
 		aux.nrAbonamente = this->nrAbonamente + s.nrAbonamente;
 		return aux;
+	}
+
+	friend ofstream& operator<<(ofstream& fisier, const Sala& s) {
+		fisier << s.nume << endl;
+		fisier << s.nrAbonamente << endl;
+		fisier << s.pret << endl;
+		fisier << s.sauna << endl;
+		fisier << s.zona << endl;
+		return fisier;
+	}
+
+	friend ifstream& operator>>(ifstream& fisier, Sala& s) {
+		fisier >> s.nume;
+		fisier >> s.nrAbonamente;
+		fisier >> s.pret;
+		if (s.zona != NULL)
+			delete[]s.zona;
+		char a[30] = {};
+		fisier >> a;
+		s.zona = new char[strlen(a) + 1];
+		strcpy_s(s.zona, strlen(a) + 1, a);
+		return fisier;
 	}
 };
 bool Sala::sauna = true;
@@ -486,6 +509,28 @@ public:
 		citire >> supliment.producator;
 		return citire;
 	}
+
+	friend ofstream& operator<<(ofstream& fisier, const Supliment& s) {
+		fisier << s.nume << endl;
+		fisier << s.pret << endl;
+		fisier << s.cantitate << endl;
+		fisier << s.producator << endl;
+		fisier << s.valabilitate << endl;
+		return fisier;
+	}
+
+	friend ifstream& operator>>(ifstream& fisier, Supliment& s) {
+		fisier >> s.nume;
+		fisier >> s.pret;
+		fisier >> s.cantitate;
+		if (s.producator != NULL)
+			delete[]s.producator;
+		char a[30] = {};
+		fisier >> a;
+		s.producator = new char[strlen(a) + 1];
+		strcpy_s(s.producator, strlen(a) + 1, a);
+		return fisier;
+	}
 };
 int Supliment::valabilitate = 30;
 string getNume2(Supliment a) {
@@ -642,4 +687,31 @@ void main() {
 	cout << client2;
 	cout << client2.getNumeClient() << endl << client2.getVechime() << endl;
 	cout << *client2.getSala();
+
+	ofstream g("Sala.txt", ios::app);
+	g << sala1;
+	g.close();
+
+	ifstream f("Masina.txt", ios::in);
+	f >> sala4;
+	cout << sala4;
+	f.close();
+
+	ofstream t("Supliment.txt", ios::app);
+	t << creatina2;
+	t.close();
+
+	ifstream l("Supliment.txt", ios::in);
+	l >> creatina4;
+	cout << creatina4;
+	l.close();
+
+	Sala s1;
+	fstream x("Sala.bin", ios::out | ios::binary);
+	x.write((char*)&s1, sizeof(Sala));
+	x.close();
+
+	fstream z("Sala.bin", ios::in | ios::binary);
+	z.read((char*)&s1, sizeof(Sala));
+	z.close();
 }
