@@ -547,6 +547,126 @@ int getCantitate2(Supliment b) {
 	return b.cantitate;
 }
 
+class SalaVip : public Sala {
+private:
+	float suprafata;
+	int oraDeschidere;
+	int oraInchidere;
+public:
+	SalaVip() : Sala() {
+		this->suprafata = 70.51;
+		this->oraDeschidere = 8;
+		this->oraInchidere = 21;
+	}
+
+	SalaVip(float suprafataNoua, int oraDeschidereNoua) : Sala(3, "Inmotion Fitness", 155.9) {
+		this->suprafata = suprafataNoua;
+		this->oraDeschidere = oraDeschidereNoua;
+		this->oraInchidere = 22;
+	}
+
+	~SalaVip() {} 
+
+	SalaVip(const SalaVip& s) : Sala(s) {
+		this->suprafata = s.suprafata;
+		this->oraDeschidere = s.oraDeschidere;
+		this->oraInchidere = s.oraInchidere;
+	}
+
+	SalaVip operator=(const SalaVip& s) {
+		if (this != &s) {
+			this->suprafata = s.suprafata;
+			this->oraDeschidere = s.oraDeschidere;
+			this->oraInchidere = s.oraInchidere;
+		}
+		return *this;
+	}
+
+	float getSuprafata() {
+		return this->suprafata;
+	}
+
+	int getOraDeschidere() {
+		return this->oraDeschidere;
+	}
+
+	int getOraInchidere() {
+		return this->oraInchidere;
+	}
+
+	void setSuprafata(float suprafataNoua) {
+		this->suprafata = suprafataNoua;
+	}
+
+	void setOraDeschidere(int oraDeschidereNoua) {
+		this->oraDeschidere = oraDeschidereNoua;
+	}
+
+	void setOraInchidere(int oraInchidereNoua) {
+		this->oraInchidere = oraInchidereNoua;
+	}
+
+	friend ostream& operator<<(ostream& out, const SalaVip& s) {
+		out << "Suprafata salii este de " << s.suprafata << " metri patrati" << endl;
+		out << "Sala se deschide la ora " << s.oraDeschidere << " si se inchide la ora" << s.oraInchidere << endl;
+		out << (Sala)s;
+		return out;
+	}
+};
+
+class SuplimentPersonalizat : public Supliment {
+private:
+	string numeCumparator;
+	int nrBucati;
+public:
+	SuplimentPersonalizat() : Supliment() {
+		this->numeCumparator = "Serban";
+		this->nrBucati = 3;
+	}
+	
+	SuplimentPersonalizat(string numeNou, int nrNou) : Supliment(2, 199.5) {
+		this->numeCumparator = numeNou;
+		this->nrBucati = nrNou;
+	}
+
+	~SuplimentPersonalizat();
+
+	SuplimentPersonalizat(const SuplimentPersonalizat& s) :Supliment() {
+		this->numeCumparator = s.numeCumparator;
+		this->nrBucati = s.nrBucati;
+	}
+
+	SuplimentPersonalizat operator=(const SuplimentPersonalizat& s) {
+		if (this != &s) {
+			this->numeCumparator = s.numeCumparator;
+			this->nrBucati = s.nrBucati;
+		}
+		return *this;
+	}
+
+	string getNumeCumparator() {
+		return this->numeCumparator;
+	}
+
+	int getNrBucati() {
+		return this->nrBucati;
+	}
+
+	void setNumeCumparator(string numeNou) {
+		this->numeCumparator = numeNou;
+	}
+
+	void setNrBucati(int nrNou) {
+		this->nrBucati = nrNou;
+	}
+
+	friend ostream& operator<<(ostream& out, const SuplimentPersonalizat& s) {
+		out << "Nume client: " << s.numeCumparator << endl;
+		out << "Numar bucati cumparate: " << s.nrBucati << endl;
+		out << (Supliment)s;
+		return out;
+	}
+};
 
 void main() {
 
@@ -714,4 +834,29 @@ void main() {
 	fstream z("Sala.bin", ios::in | ios::binary);
 	z.read((char*)&s1, sizeof(Sala));
 	z.close();
+
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
+	SalaVip v1;
+	cout << v1;
+
+	SalaVip v2(v1);
+	cout << v2;
+
+	SalaVip v3(50, 15);
+	cout << v3;
+	v3 = v1;
+	cout << v3;
+
+	SuplimentPersonalizat sp1;
+	cout << sp1;
+
+	SuplimentPersonalizat sp2(sp1);
+	cout << sp2;
+
+	SuplimentPersonalizat sp3("Ultra", 10);
+	cout << sp3;
+	sp3 = sp1;
+	cout << sp3;
 }
