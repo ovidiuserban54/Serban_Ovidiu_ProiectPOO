@@ -1,10 +1,17 @@
 #include <iostream>
+#include <string>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 //domeniul ales este sport
 
-class Sala {
+class SalaCrossFit {
+public:
+	virtual void afisareDescriere() = 0;
+};
+
+class Sala: public SalaCrossFit {
 private:
 	const int id;
 	string nume;
@@ -134,6 +141,10 @@ public:
 		strcpy_s(s.zona, strlen(a) + 1, a);
 		return fisier;
 	}
+
+	void afisareDescriere() {
+		cout << "Sala cu numele " << this->getNume() << endl;
+	}
 };
 bool Sala::sauna = true;
 string getNumeSala2(Sala a) {
@@ -175,7 +186,7 @@ istream& operator>>(istream& citeste, Sala& sala) {
 class Client {
 private:
 	string nume;
-	Sala* sala;
+	SalaCrossFit** sala;
 	int vechime;
 public:
 	Client() {
@@ -184,9 +195,10 @@ public:
 		this->vechime = 0;
 	}
 
-	Client(int vechime) {
+	Client(SalaCrossFit* sala,int vechime) {
 		this->nume = "Serban Ovidiu";
-		this->sala = sala;
+		this->sala = new SalaCrossFit * [1];
+		this->sala[0] = sala;
 		this->vechime = vechime;
 	}
 
@@ -217,11 +229,11 @@ public:
 		this->vechime = vechimeNoua;
 	}
 
-	Sala* getSala() {
+	SalaCrossFit** getSala() {
 		return this->sala;
 	}
 
-	Sala operator[](int index) {
+	SalaCrossFit* operator[](int index) {
 		return this->sala[index];
 	}
 
@@ -378,8 +390,12 @@ ostream& operator<<(ostream& out, const Scripete& scripete) {
 	return out;
 }
 
+class SuplimentAbstract {
+public:
+	virtual void consumareSupliment() = 0;
+};
 
-class Supliment {
+class Supliment: public SuplimentAbstract {
 
 private:
 	const int id;
@@ -531,6 +547,11 @@ public:
 		strcpy_s(s.producator, strlen(a) + 1, a);
 		return fisier;
 	}
+
+	void consumareSupliment() {
+		cout << "Ati platit " << this->getPret() << " lei!"<<endl;
+	}
+
 };
 int Supliment::valabilitate = 30;
 string getNume2(Supliment a) {
@@ -629,7 +650,7 @@ public:
 		this->nrBucati = nrNou;
 	}
 
-	~SuplimentPersonalizat();
+	
 
 	SuplimentPersonalizat(const SuplimentPersonalizat& s) :Supliment() {
 		this->numeCumparator = s.numeCumparator;
@@ -728,6 +749,24 @@ void main() {
 	for (int i = 0; i < linii; i++)
 		delete[]m_sala[i];
 	delete[]m_sala;
+
+	sala3.afisareDescriere();
+
+	vector<SalaCrossFit*> vectorSali;
+
+	SalaCrossFit* sala7 = new Sala();
+
+	for (int i = 8; i < 18; i++) {
+		Sala* sala = new Sala(i, "Sala " + to_string(i + 1));
+		vectorSali.push_back(sala);
+	}
+
+	for (const auto& sala : vectorSali) {
+		sala->afisareDescriere();
+		delete sala;
+		cout << "---------------------------------" << endl;
+	}
+
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
@@ -762,6 +801,7 @@ void main() {
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	}
 	delete[]v_scripete;
+
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
@@ -797,16 +837,32 @@ void main() {
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	}
 	delete[]v_creatina;
+
+	creatina2.consumareSupliment();
+
+	vector<SuplimentAbstract*> vectorSuplimente;
+
+	for (int i = 5; i <16; i++) {
+		Supliment* creatina = new Supliment(i, 15.0 * (i + 1));
+		vectorSuplimente.push_back(creatina);
+	}
+
+	for (const auto& creatina : vectorSuplimente) {
+		creatina->consumareSupliment();
+		delete creatina;
+		cout << "----------------------------------" << endl;
+	}
+
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
 	Client client1;
 	cout << client1;
 
-	Client client2(5);
+	Client client2(sala7, 5);
 	cout << client2;
 	cout << client2.getNumeClient() << endl << client2.getVechime() << endl;
-	cout << *client2.getSala();
+	cout << client2.getSala();
 
 	ofstream g("Sala.txt", ios::app);
 	g << sala1;
