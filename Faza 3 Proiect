@@ -4,7 +4,1004 @@
 #include <vector>
 using namespace std;
 
+//domeniul ales este sport#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
 //domeniul ales este sport
+
+
+//clasa abstracta 1
+
+class SalaCrossFit {
+public:
+	virtual void afisareDescriere() = 0;
+};
+
+//clasa 1
+
+class Sala: public SalaCrossFit {
+private:
+	const int id;
+	string nume;
+	int nrAbonamente;
+	float pret;
+	char* zona;
+	static bool sauna;
+public:
+	const int getID() {
+		return id;
+	}
+	string getNume() {
+		return nume;
+	}
+	int getNrAbonamente() {
+		return nrAbonamente;
+	}
+	float getPret() {
+		return pret;
+	}
+	char* getZona() {
+		return this->zona;
+	}
+	static bool getSauna() {
+		return sauna;
+	}
+	void setNume(string nume) {
+		if (nume.length() > 2)
+			this->nume = nume;
+	}
+	void setNrAbonamente(int nrAbonamente) {
+		if (nrAbonamente > 1)
+			this->nrAbonamente = nrAbonamente;
+	}
+	void setPret(float pret) {
+		if (pret > 2)
+			this->pret = pret;
+	}
+	void setZona(char* zona) {
+		if (strlen(zona) > 1) {
+			this->zona = new char[strlen(zona) + 1];
+			strcpy_s(this->zona, strlen(zona) + 1, zona);
+		}
+	}
+
+	//constructor 
+
+	Sala() : id() {
+		this->nume = "18gym";
+		this->nrAbonamente = 0;
+		this->pret = 0;
+		this->zona = new char[strlen("Berceni") + 1];
+		strcpy_s(this->zona, strlen("Berceni") + 1, "Berceni");
+	}
+
+	//constructor
+
+	Sala(int id) : id(id) {
+		this->nume = "18gym";
+		this->nrAbonamente = 0;
+		this->pret = 0;
+		this->zona = new char[strlen("Berceni") + 1];
+		strcpy_s(this->zona, strlen("Berceni") + 1, "Berceni");
+	}
+
+	//constructor 
+
+	Sala(int idNou, string nume) :id(idNou) {
+		this->nume = nume;
+		this->nrAbonamente = 700;
+		this->pret = 500;
+		this->zona = new char[strlen("Piata Unirii") + 1];
+		strcpy_s(this->zona, strlen("Piata Unirii") + 1, "Piata Unirii");
+	}
+
+	//constructor
+
+	Sala(int idNou, string numeNou, float pret) :id(idNou), nume(numeNou), pret(pret) {
+		this->nrAbonamente = 250;
+		this->zona = new char[strlen("Pipera") + 1];
+		strcpy_s(this->zona, strlen("Pipera") + 1, "Pipera");
+	}
+
+	//constructor de copiere
+
+	Sala(const Sala& s) : id(s.id) {
+		this->nume = s.nume;
+		this->nrAbonamente = s.nrAbonamente;
+		this->pret = s.pret;
+		this->zona = new char[strlen(s.zona) + 1];
+		strcpy_s(this->zona, strlen(s.zona) + 1, s.zona);
+	}
+
+	//operator =
+
+	Sala operator=(const Sala& s) {
+		if (this != &s) {
+			if (this->zona != NULL) {
+				delete[]this->zona;
+			}
+			this->nume = s.nume;
+			this->nrAbonamente = s.nrAbonamente;
+			this->pret = s.pret;
+			this->zona = new char[strlen(s.zona) + 1];
+			strcpy_s(this->zona, strlen(s.zona) + 1, s.zona);
+		}
+		return *this;
+	}
+
+	static void setSauna() {
+		cout << (sauna ? "Sala este dotata cu sauna." : "Sala nu este dotata cu sauna.") << endl;
+	}
+
+	//destructor
+
+	~Sala() {
+		if (this->zona != NULL) {
+			delete[]this->zona;
+		}
+	}
+	friend string getNumeSala2(Sala a);
+	friend float getNrAbonamente2(Sala b);
+	friend ostream& operator<<(ostream& out, const Sala& sala);
+	friend istream& operator>>(istream& citeste, Sala& sala);
+
+	//operator +
+
+	Sala operator+ (const Sala& s) {
+		Sala aux = *this;
+		aux.nrAbonamente = this->nrAbonamente + s.nrAbonamente;
+		return aux;
+	}
+
+	//operator << pentru fisiere
+
+	friend ofstream& operator<<(ofstream& fisier, const Sala& s) {
+		fisier << s.nume << endl;
+		fisier << s.nrAbonamente << endl;
+		fisier << s.pret << endl;
+		fisier << s.sauna << endl;
+		fisier << s.zona << endl;
+		return fisier;
+	}
+
+	//operator >> pentru fisiere 
+
+	friend ifstream& operator>>(ifstream& fisier, Sala& s) {
+		fisier >> s.nume;
+		fisier >> s.nrAbonamente;
+		fisier >> s.pret;
+		if (s.zona != NULL)
+			delete[]s.zona;
+		char a[30] = {};
+		fisier >> a;
+		s.zona = new char[strlen(a) + 1];
+		strcpy_s(s.zona, strlen(a) + 1, a);
+		return fisier;
+	}
+
+	void afisareDescriere() {
+		cout << "Sala cu numele " << this->getNume() << endl;
+	}
+};
+bool Sala::sauna = true;
+string getNumeSala2(Sala a) {
+	if (a.nume == "World CLass") {
+		cout << "Sala aleasa este ";
+	}
+	return a.nume;
+}
+
+float getNrAbonamente2(Sala b) {
+
+	return b.nrAbonamente;
+
+}
+
+//operator <<
+
+ostream& operator<<(ostream& out, const Sala& sala) {
+	out << sala.id << ". Sala de fitness " << sala.nume << " se afla in zona " << sala.zona << ", pretul abonamentului este de  " << sala.pret << ", sala are " << sala.nrAbonamente << " abonamente active" << endl;
+	out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	return out;
+}
+
+//operator >>
+
+istream& operator>>(istream& citeste, Sala& sala) {
+	cout << "Nume: ";
+	citeste >> sala.nume;
+	cout << "Nr abonamente: ";
+	citeste >> sala.nrAbonamente;
+	cout << "Pret abonament: ";
+	citeste >> sala.pret;
+	if (sala.zona != NULL) {
+		delete[]sala.zona;
+	}
+	sala.zona = new char[strlen(sala.zona) + 1];
+	cout << "Zona: ";
+	citeste >> sala.zona;
+	return citeste;
+}
+
+//clasa has-a pentru clasa 1
+
+class Client {
+private:
+	string nume;
+	SalaCrossFit** sala;
+	int vechime;
+public:
+
+	Client() {
+		this->nume = "stefan";
+		this->sala=NULL;		
+		this->vechime = 0;
+	}
+
+	Client(SalaCrossFit* sala,int vechime) {
+		this->nume = "Serban Ovidiu";
+		this->sala = new SalaCrossFit * [1];
+		this->sala[0] = sala;
+		this->vechime = vechime;
+	}
+
+	~Client() {
+		if (this->sala != NULL) {
+			delete[]this->sala;
+		}
+	}
+	friend ostream& operator<<(ostream& out, const Client& c) {
+		out << "Clientul " << c.nume << " are o vechime de " << c.vechime<<endl;
+		out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		return out;
+	}
+	
+	string getNumeClient() {
+		return this->nume;
+	}
+
+	void setNumeClient(string numeNou) {
+		this->nume = numeNou;
+	}
+
+	int getVechime() {
+		return this->vechime;
+	}
+
+	void setVechime(int vechimeNoua) {
+		this->vechime = vechimeNoua;
+	}
+
+	SalaCrossFit** getSala() {
+		return this->sala;
+	}
+
+	SalaCrossFit* operator[](int index) {
+		return this->sala[index];
+	}
+
+	Client operator+(const Client& c) {
+		Client aux = *this;
+		aux.vechime = this->vechime + c.vechime;
+		return aux;
+	}
+};
+
+//clasa 2
+
+class Scripete {
+
+private:
+	const int id;
+	string culoare;
+	float pret;
+	int* kilograme;
+	static string brand;
+
+public:
+	const int getID() {
+		return id;
+	}
+	string getCuloare() {
+		return culoare;
+	}
+	float getPret() {
+		return pret;
+	}
+	int* getKilograme() {
+		return this->kilograme;
+	}
+	static string getBrand() {
+		return brand;
+	}
+	void setCuloare(string culoare) {
+		if (culoare.length() > 2) {
+			this->culoare = culoare;
+		}
+	}
+	void setPret(float pret) {
+		if (pret > 0)
+			this->pret = pret;
+	}
+	void setKilograme(int* kilograme) {
+		if (kilograme != NULL) {
+			if (this->kilograme != NULL) {
+				delete[]this->kilograme;
+			}
+			this->kilograme = new int[1];
+			*this->kilograme = *kilograme;
+		}
+	}
+	Scripete() :id() {
+		this->culoare = "negru";
+		this->pret = 1550;
+		this->kilograme = NULL;
+	}
+
+	Scripete(int id) : id(id) {
+		this->culoare = "negru";
+		this->pret = 1550;
+		this->kilograme = NULL;
+	}
+
+	Scripete(int idNou, string culoare, float pret) :id(idNou) {
+		this->culoare = culoare;
+		this->pret = pret;
+		this->kilograme = NULL;
+	}
+
+	Scripete(int idNou, string culoare, float pret, int* kilograme) :id(idNou), culoare(culoare), pret(pret) {
+		if (pret) {
+			this->kilograme = new int[1];
+			*this->kilograme = *kilograme;
+		}
+	}
+	Scripete(const Scripete& sr) :id(sr.id) {
+		this->culoare = sr.culoare;
+		this->pret = sr.pret;
+		this->kilograme = new int[1];
+		*this->kilograme = *kilograme;
+	}
+
+	Scripete operator=(const Scripete& sr) {
+		if (this != &sr) {
+			if (this->kilograme != NULL) {
+				delete[]this->kilograme;
+			}
+			this->culoare = sr.culoare;
+			this->pret = sr.pret;
+			this->kilograme = new int[1];
+			*this->kilograme = *sr.kilograme;
+		}
+		return*this;
+	}
+
+	static void schimbaBrand(string& brandNou) {
+		brand = brandNou;
+	}
+
+	~Scripete() {
+		if (this->kilograme != NULL) {
+			delete[]this->kilograme;
+		}
+	}
+	friend string getCuloareScripete2(Scripete a);
+	friend float getPret2(Scripete b);
+	friend ostream& operator<<(ostream& out, const Scripete& scripete);
+	friend istream& operator>>(istream& mouse, Scripete& scripete);
+
+	Scripete operator+(const Scripete& s) {
+		Scripete aux = *this;
+		aux.pret = this->pret + s.pret; 
+		if (this->kilograme != NULL && s.kilograme != NULL) {
+			aux.kilograme = new int[1];
+			*aux.kilograme = *this->kilograme + *s.kilograme;
+		}
+		else if (this->kilograme != NULL) {
+			aux.kilograme = new int[1];
+			*aux.kilograme = *this->kilograme;
+		}
+		else if (s.kilograme != NULL) {
+			aux.kilograme = new int[1];
+			*aux.kilograme = *s.kilograme;
+		}
+		else {
+			aux.kilograme = NULL; 
+		}
+		return aux;
+	}
+
+};
+string Scripete::brand = "Technogym";
+string getCuloareScripete2(Scripete a) {
+	if (a.culoare == "roz") {
+		cout << "Culoarea aleasa este ";
+	}
+	return a.culoare;
+}
+
+float getPret2(Scripete b) {
+	if (b.pret != NULL) {
+		cout << "Scripetele costa ";
+	}
+	return b.pret;
+}
+
+istream& operator>>(istream& mouse, Scripete& scripete) {
+
+	cout << "Culoarea: ";
+	mouse >> scripete.culoare;
+	if (scripete.kilograme != NULL) {
+		delete[]scripete.kilograme;
+	}
+
+	scripete.kilograme = new int[1];
+	cout << "Greutatea este ";
+	mouse >> *scripete.kilograme;
+
+	cout << "Scripetele costa ";
+	mouse >> scripete.pret;
+	return mouse;
+}
+
+ostream& operator<<(ostream& out, const Scripete& scripete) {
+	out << scripete.id << ". Scripetele de la brandul " << scripete.brand << " este " << scripete.culoare << ". ";
+	if (scripete.kilograme) {
+		out << "Are o incarcatura de " << *scripete.kilograme << " kilograme. ";
+	}
+	else {
+		out << "Scripetele nu vine la pachet cu greutati. ";
+	}
+	out << " Acest scripete costa " << scripete.pret << "." << endl;
+	out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	return out;
+}
+
+//clasa abstracta 2
+
+class SuplimentAbstract {
+public:
+	virtual void consumareSupliment() = 0;
+};
+
+//clasa 3
+
+class Supliment: public SuplimentAbstract {
+
+private:
+	const int id;
+	string nume;
+	float pret;
+	int cantitate;
+	char* producator;
+	static int valabilitate;
+
+public:
+
+	int getID() {
+		return id;
+	}
+	string getNume() {
+		return nume;
+	}
+	float getPret() {
+		return pret;
+	}
+	int getCant() {
+		return cantitate;
+	}
+	char* getProducator() {
+		return this->producator;
+	}
+	static int getValabilitate() {
+		return valabilitate;
+	}
+	void setNume(string nume) {
+		if (nume.length() > 2)
+			this->nume = nume;
+	}
+
+	void setPret(float pret) {
+		if (pret > 0)
+			this->pret = pret;
+	}
+	void setCant(int cant) {
+		if (cant > 0)
+			this->cantitate = cant;
+	}
+
+	void setProducator(char* producator) {
+		if (strlen(producator) > 0) {
+			this->producator = new char[strlen(producator) + 1];
+			strcpy_s(this->producator, strlen(producator) + 1, producator);
+		}
+	}
+
+
+	Supliment() :id(1) {
+		this->nume = "Proteina";
+		this->pret = 300;
+		this->cantitate = 1000;
+		this->producator = new char[strlen("Myprotein") + 1];
+		strcpy_s(this->producator, strlen("Myprotein") + 1, "Myprotein");
+	}
+
+	Supliment(int idNou, float pret) :id(idNou), pret(pret) {
+		this->nume = "Creatina";
+		this->cantitate = 500;
+		this->producator = new char[strlen("Gymbeam") + 1];
+		strcpy_s(this->producator, strlen("Gymbeam") + 1, "Gymbeam");
+	}
+
+	Supliment(int idNou, float pret, string nume, char* producator) : id(idNou), pret(pret), nume(nume) {
+		this->cantitate = 800;
+		this->producator = new char[strlen(producator) + 1];
+		strcpy_s(this->producator, strlen(producator) + 1, producator);
+	}
+
+	Supliment(const Supliment& su) :id(su.id) {
+		this->nume = su.nume;
+		this->pret = su.pret;
+		this->cantitate = su.cantitate;
+		this->producator = new char[strlen(su.producator) + 1];
+		strcpy_s(this->producator, strlen(su.producator) + 1, su.producator);
+	}
+
+	Supliment operator=(const Supliment& su) {
+		if (this != &su) {
+			if (producator != NULL) {
+				delete[]this->producator;
+			}
+			this->nume = su.nume;
+			this->pret = su.pret;
+			this->cantitate = su.cantitate;
+			this->producator = new char[strlen(su.producator) + 1];
+			strcpy_s(this->producator, strlen(su.producator) + 1, su.producator);
+		}
+		return*this;
+	}
+
+
+	static void setValabilitate(int vNou) {
+		valabilitate = vNou;
+	}
+	char& operator[](int index) {
+		return this->producator[index];
+	}
+
+	~Supliment() {
+		if (producator != NULL) {
+			delete[]this->producator;
+		}
+	}
+	friend string getNume2(Supliment a);
+	friend int getCantitate2(Supliment b);
+	friend ostream& operator<<(ostream& out, const Supliment& supliment) {
+		out << supliment.id << "." << supliment.nume << " de la " << supliment.producator << " costa " << supliment.pret << "lei, cantitate " << supliment.cantitate << " grame, iar termenul de valabilitate este de " << supliment.valabilitate << " de zile." << endl;
+		out << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		return out;
+	}
+	friend istream& operator>>(istream& citire, Supliment& supliment) {
+		cout << "Nume:";
+		citire >> supliment.nume;
+		cout << "Pret: ";
+		citire >> supliment.pret;
+		cout << "Cantitate: ";
+		citire >> supliment.cantitate;
+		if (supliment.producator != NULL) {
+			delete[]supliment.producator;
+		}
+		supliment.producator = new char[strlen(supliment.producator) + 1];
+		cout << "Producator: ";
+		citire >> supliment.producator;
+		return citire;
+	}
+
+	friend ofstream& operator<<(ofstream& fisier, const Supliment& s) {
+		fisier << s.nume << endl;
+		fisier << s.pret << endl;
+		fisier << s.cantitate << endl;
+		fisier << s.producator << endl;
+		fisier << s.valabilitate << endl;
+		return fisier;
+	}
+
+	friend ifstream& operator>>(ifstream& fisier, Supliment& s) {
+		fisier >> s.nume;
+		fisier >> s.pret;
+		fisier >> s.cantitate;
+		if (s.producator != NULL)
+			delete[]s.producator;
+		char a[30] = {};
+		fisier >> a;
+		s.producator = new char[strlen(a) + 1];
+		strcpy_s(s.producator, strlen(a) + 1, a);
+		return fisier;
+	}
+
+	void consumareSupliment() {
+		cout << "Ati platit " << this->getPret() << " lei!"<<endl;
+	}
+
+};
+int Supliment::valabilitate = 30;
+string getNume2(Supliment a) {
+	if (a.nume == "creatina") {
+		cout << "Suplimentul ales este ";
+	}
+	return a.nume;
+}
+
+int getCantitate2(Supliment b) {
+	if (b.cantitate != NULL) {
+		cout << "Produsul vine in cantitate de ";
+	}
+	return b.cantitate;
+}
+
+//clasa is-a pentru clasa 1
+
+class SalaVip : public Sala {
+private:
+	float suprafata;
+	int oraDeschidere;
+	int oraInchidere;
+public:
+	SalaVip() : Sala() {
+		this->suprafata = 70.51;
+		this->oraDeschidere = 8;
+		this->oraInchidere = 21;
+	}
+
+	SalaVip(float suprafataNoua, int oraDeschidereNoua) : Sala(3, "Inmotion Fitness", 155.9) {
+		this->suprafata = suprafataNoua;
+		this->oraDeschidere = oraDeschidereNoua;
+		this->oraInchidere = 22;
+	}
+
+	~SalaVip() {} 
+
+	SalaVip(const SalaVip& s) : Sala(s) {
+		this->suprafata = s.suprafata;
+		this->oraDeschidere = s.oraDeschidere;
+		this->oraInchidere = s.oraInchidere;
+	}
+
+	SalaVip operator=(const SalaVip& s) {
+		if (this != &s) {
+			this->suprafata = s.suprafata;
+			this->oraDeschidere = s.oraDeschidere;
+			this->oraInchidere = s.oraInchidere;
+		}
+		return *this;
+	}
+
+	float getSuprafata() {
+		return this->suprafata;
+	}
+
+	int getOraDeschidere() {
+		return this->oraDeschidere;
+	}
+
+	int getOraInchidere() {
+		return this->oraInchidere;
+	}
+
+	void setSuprafata(float suprafataNoua) {
+		this->suprafata = suprafataNoua;
+	}
+
+	void setOraDeschidere(int oraDeschidereNoua) {
+		this->oraDeschidere = oraDeschidereNoua;
+	}
+
+	void setOraInchidere(int oraInchidereNoua) {
+		this->oraInchidere = oraInchidereNoua;
+	}
+
+	friend ostream& operator<<(ostream& out, const SalaVip& s) {
+		out << "Suprafata salii este de " << s.suprafata << " metri patrati" << endl;
+		out << "Sala se deschide la ora " << s.oraDeschidere << " si se inchide la ora" << s.oraInchidere << endl;
+		out << (Sala)s;
+		return out;
+	}
+};
+
+//clasa is-a pentru clasa 3
+
+class SuplimentPersonalizat : public Supliment {
+private:
+	string numeCumparator;
+	int nrBucati;
+public:
+	SuplimentPersonalizat() : Supliment() {
+		this->numeCumparator = "Serban";
+		this->nrBucati = 3;
+	}
+	
+	SuplimentPersonalizat(string numeNou, int nrNou) : Supliment(2, 199.5) {
+		this->numeCumparator = numeNou;
+		this->nrBucati = nrNou;
+	}
+
+	
+
+	SuplimentPersonalizat(const SuplimentPersonalizat& s) :Supliment() {
+		this->numeCumparator = s.numeCumparator;
+		this->nrBucati = s.nrBucati;
+	}
+
+	SuplimentPersonalizat operator=(const SuplimentPersonalizat& s) {
+		if (this != &s) {
+			this->numeCumparator = s.numeCumparator;
+			this->nrBucati = s.nrBucati;
+		}
+		return *this;
+	}
+
+	string getNumeCumparator() {
+		return this->numeCumparator;
+	}
+
+	int getNrBucati() {
+		return this->nrBucati;
+	}
+
+	void setNumeCumparator(string numeNou) {
+		this->numeCumparator = numeNou;
+	}
+
+	void setNrBucati(int nrNou) {
+		this->nrBucati = nrNou;
+	}
+
+	friend ostream& operator<<(ostream& out, const SuplimentPersonalizat& s) {
+		out << "Nume client: " << s.numeCumparator << endl;
+		out << "Numar bucati cumparate: " << s.nrBucati << endl;
+		out << (Supliment)s;
+		return out;
+	}
+};
+
+void main() {
+
+	char* zona = new char(strlen("Constanta") + 1);
+	strcpy_s(zona, strlen("Constanta") + 1, "Constanta");
+	Sala sala1(1);
+	Sala sala2(2, "World Class");
+	Sala sala3(3, "Inmotion Fitness", 155.9);
+	Sala sala4 = sala3; //constructor copiere
+	Sala sala5(5);
+	Sala sala6(6);
+	Sala::setSauna();
+	cout << "Constructor copiere:" << endl;
+	cout << sala4 << endl;
+	sala6 = sala2; //operator=
+	cout << "Operator =" << endl;
+	cout << sala6 << endl;
+	//cin >> sala5;  //operator>>
+	sala1 = sala2 + sala3;  //operator +
+	cout << "Afisarea salii 1 " << endl << sala1;
+	cout << "Afisarea salii 2 " << endl << sala2;
+	cout << "Afisarea salii 3 " << endl << sala3;  //operator <<
+	cout << "Afisarea salii 4 " << endl << sala4;
+	//cout << "Afisarea salii 5 " << endl << sala5;
+	sala3.setNume("Fit Gym");
+	sala3.setNrAbonamente(249);
+	sala3.setPret(99.99);
+	sala3.setZona(zona);
+	cout << sala3.getID() <<' '<< sala3.getNrAbonamente() <<' ' << sala3.getNume()<<' ' << sala3.getPret()<<' ' << sala3.getSauna()<<' ' << ' ' << sala3.getZona() << endl;
+
+	/*Sala* v_sala = new Sala[4];
+	int lungime_vectors = 4;
+	for (int i = 0; i < lungime_vectors; i++)
+	{
+		cout << "Sala " << i + 1 << ": "<<endl;
+		cin >> v_sala[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	for (int i = 0; i < lungime_vectors; i++)
+	{
+		cout << v_sala[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	delete[]v_sala;
+
+	int linii = 2, coloane = 2;
+	Sala** m_sala = new Sala * [linii];
+	for (int i = 0; i < linii; i++)
+		m_sala[i] = new Sala[coloane];
+
+	for (int i = 0; i < linii; i++)
+		for (int j = 0; j < coloane; j++)
+		{
+			cout << "\nCitire sala de pe linia " << i + 1 << " si coloana " << j + 1 << endl;
+			cin >> m_sala[i][j];
+		}
+	for (int i = 0; i < linii; i++)
+		for (int j = 0; j < coloane; j++)
+		{
+			cout << "Afisare sala de pe linia " << i + 1 << " si coloana " << j + 1 << endl;
+			cout << m_sala[i][j];
+		}
+	for (int i = 0; i < linii; i++)
+		delete[]m_sala[i];
+	delete[]m_sala;*/
+
+	sala3.afisareDescriere();
+
+	vector<SalaCrossFit*> vectorSali;
+
+	SalaCrossFit* sala7 = new Sala();
+
+	for (int i = 8; i < 18; i++) {
+		Sala* sala = new Sala(i, "Sala " + to_string(i + 1));
+		vectorSali.push_back(sala);
+	}
+
+	for (const auto& sala : vectorSali) {
+		sala->afisareDescriere();
+		delete sala;
+		cout << "---------------------------------" << endl;
+	}
+
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
+
+	string brandNou = "Muscles";
+	int* greutate = new int[1];
+	greutate[0] = 150;
+	int* greutate2 = new int[2];
+	greutate2[0] = 300;
+	Scripete scripete1(1);
+	Scripete scripete2(2, "alb", 199.99);
+	Scripete scripete3(3, "roz", 299.30, greutate);
+	Scripete scripete4(4);
+	Scripete scripete5(5);
+	scripete4 = scripete3;
+	cout << "Operator =" << endl;
+	cout << scripete4;
+	//cin >> scripete5;
+	Scripete::schimbaBrand(brandNou);
+	//cout << scripete5 << endl;
+	scripete5 = scripete2 + scripete3;
+	cout << "Operator + " << endl;
+	cout << scripete5;
+	/*Scripete* v_scripete = new Scripete[4];
+	int lungime_vector = 4;
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << "Scripete " << i + 1 << ": "<<endl;
+		cin >> v_scripete[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	for (int i = 0; i < lungime_vector; i++)
+	{
+		cout << v_scripete[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	delete[]v_scripete;*/
+
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
+
+	int vNou = 60;
+	char* producator = new char[strlen("Gymbeam") + 1];
+	strcpy_s(producator, strlen("Gymbeam") + 1, "Gymbeam");
+	char* producator2 = new char[strlen("MYprotein") + 1];
+	strcpy_s(producator2, strlen("MYprotein") + 1, "MYprotein");
+	Supliment proteina;
+	Supliment creatina(2, 199.5);
+	Supliment bcaa(3, 75, "BCAA", producator);
+	Supliment::setValabilitate(vNou);
+	Supliment creatina2;
+	creatina2 = creatina;
+	Supliment creatina3;
+	Supliment creatina4 = creatina;
+	//cin >> creatina3;
+	cout << creatina[1]<<endl;
+	creatina[1] = 'a';
+	cout << creatina[1]<<endl;
+	/*Supliment* v_creatina = new Supliment[4];
+	int lungime_vectorc = 4;
+	for (int i = 0; i < lungime_vectorc; i++)
+	{
+		cout << "Suplimentul " << i + 1 << ": " << endl;
+		cin >> v_creatina[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	for (int i = 0; i < lungime_vectorc; i++)
+	{
+		cout << v_creatina[i];
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	delete[]v_creatina;*/
+
+	creatina2.consumareSupliment();
+	cout << endl;
+
+	vector<SuplimentAbstract*> vectorSuplimente;
+
+	for (int i = 5; i <16; i++) {
+		Supliment* creatina = new Supliment(i, 15.0 * (i + 1));
+		vectorSuplimente.push_back(creatina);
+	}
+
+	for (const auto& creatina : vectorSuplimente) {
+		creatina->consumareSupliment();
+		delete creatina;
+		cout << "----------------------------------" << endl;
+	}
+
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
+	Client client1;
+	cout << client1;
+
+	Client client2(sala7, 5);
+	cout << client2;
+	cout << client2.getNumeClient() << endl << client2.getVechime() << endl;
+	cout << endl;
+
+	ofstream g("Sala.txt", ios::app);
+	g << sala1;
+	g.close();
+
+	ifstream f("Sala.txt", ios::in);
+	f >> sala4;
+	cout << sala4<<endl;
+	f.close();
+
+	ofstream t("Supliment.txt", ios::app);
+	t << creatina2;
+	t.close();
+
+	ifstream l("Supliment.txt", ios::in);
+	l >> creatina4;
+	cout << creatina4<<endl;
+	l.close();
+
+	Sala s1;
+	fstream x("Sala.bin", ios::out | ios::binary);
+	x.write((char*)&s1, sizeof(Sala));
+	x.close();
+
+	fstream z("Sala.bin", ios::in | ios::binary);
+	z.read((char*)&s1, sizeof(Sala));
+	z.close();
+
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
+	SalaVip v1;
+	cout << v1;
+
+	SalaVip v2(v1);
+	cout << v2;
+
+	SalaVip v3(50, 15);
+	cout << v3;
+	v3 = v1;
+	cout << v3;
+
+	SuplimentPersonalizat sp1;
+	cout << sp1;
+
+	SuplimentPersonalizat sp2(sp1);
+	cout << sp2;
+
+	SuplimentPersonalizat sp3("Ovidiu", 10);
+	cout << sp3;
+	sp3 = sp1;
+	cout << sp3;
+}
 
 class SalaCrossFit {
 public:
